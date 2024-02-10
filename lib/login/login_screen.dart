@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:chat_app/home/home_screen.dart';
 import 'package:chat_app/login/login_navigator.dart';
 import 'package:chat_app/login/login_view_model.dart';
-import 'package:chat_app/register/register.dart';
+import 'package:chat_app/register/register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/utils.dart' as Utils;
@@ -28,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
     super.initState();
     viewModel.navigator = this;
   }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -80,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
                         },
                         validator: (text) {
                           final bool emailValid = RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                               .hasMatch(text!);
                           if (text == null || text.trim().isEmpty) {
                             return 'please enter your Email';
@@ -120,7 +123,8 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
                       SizedBox(height: 15),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pushNamed(RegisterScreen.routename);
+                          Navigator.of(context)
+                              .pushNamed(RegisterScreen.routename);
                         },
                         child: Text('Create An Account'),
                       ),
@@ -134,7 +138,6 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
       ],
     );
   }
-
 
   void validateForm() async {
     if (formkey.currentState?.validate() == true) {
@@ -155,7 +158,17 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
   @override
   void showMessage(String message) {
     Utils.showMessage(context, message, 'ok', (context) {
-      Navigator.of(context).pushNamed(HomeScreen.routeScreen);
+      Navigator.pop(context);
     });
+  }
+
+  @override
+  void navigateToHome() {
+    Timer(
+      Duration(seconds: 5),
+      () {
+        Navigator.of(context).pushReplacementNamed(HomeScreen.routeScreen);
+      },
+    );
   }
 }

@@ -168,7 +168,7 @@ class _RegisterScreenState extends State<RegisterScreen> implements RegisterNavi
 
   void validateForm() async {
     if (formkey.currentState?.validate() == true) {
-        viewModel.registerfirebaseAuth(email, password);
+        viewModel.registerfirebaseAuth(email, password,firstname,lastname,username);
     }
   }
 
@@ -185,8 +185,18 @@ class _RegisterScreenState extends State<RegisterScreen> implements RegisterNavi
   @override
   void showMessage(String message) {
     Utils.showMessage(context, message, 'OK', (context){
-      Navigator.of(context).pushNamed(HomeScreen.routeScreen);
+      Navigator.pop(context);
     });
+  }
+
+  @override
+  void navigateToHome() {
+    Timer(
+      Duration(seconds: 5),
+          () {
+        Navigator.of(context).pushReplacementNamed(HomeScreen.routeScreen);
+      },
+    );
   }
   
 }

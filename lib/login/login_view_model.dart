@@ -1,3 +1,4 @@
+import 'package:chat_app/database/database_utils.dart';
 import 'package:chat_app/login/login_navigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,15 @@ class LoginViewModel extends ChangeNotifier {
           .signInWithEmailAndPassword(email: email, password: password);
       navigator.hideLoading();
       navigator.showMessage('Logged in Successfully');
+
+      // retrieve data
+      var getuser= await DatabaseUtils.getUser(credential.user?.uid ??'');
+      if(getuser ==null){
+        navigator.hideLoading();
+        navigator.showMessage('please try again');
+      }else {
+        navigator.navigateToHome();
+      }
       print('id: ${credential.user?.uid}');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
