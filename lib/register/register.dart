@@ -1,4 +1,5 @@
 import 'package:chat_app/firebase_errors.dart';
+import 'package:chat_app/home/home_screen.dart';
 import 'package:chat_app/register/register_navigator.dart';
 import 'package:chat_app/register/register_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -184,7 +185,7 @@ class _RegisterScreenState extends State<RegisterScreen> implements RegisterNavi
   @override
   void showMessage(String message) {
     Utils.showMessage(context, message, 'OK', (context){
-      Navigator.pop(context);
+      Navigator.of(context).pushNamed(HomeScreen.routeScreen);
     });
   }
   

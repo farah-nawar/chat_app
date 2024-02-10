@@ -1,3 +1,5 @@
+import 'package:chat_app/home/home_screen.dart';
+import 'package:chat_app/login/login_screen.dart';
 import 'package:chat_app/register/register.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +16,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute:RegisterScreen.routename,
+      initialRoute:LoginScreen.routename,
       routes: {
         RegisterScreen.routename: (context) => RegisterScreen(),
+        LoginScreen.routename:(context) => LoginScreen(),
+        HomeScreen.routeScreen:(context)=> HomeScreen(),
       },
     );
   }
