@@ -13,9 +13,10 @@ class AddRoomViewModel extends ChangeNotifier{
         categoryid: categoryId);
     try {
       navigator.showLoading();
-      var CreatedRoom = await DatabaseUtils.addRoomtofirestore(room);
+      var createdroom= await DatabaseUtils.addRoomtofirestore(room);
       navigator.hideLoading();
       navigator.showMessage('Room was added succesfully');
+      navigator.navigateToHome();
     }catch(e){
       navigator.hideLoading();
       navigator.showMessage(e.toString());

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:chat_app/addroom/add_room_navigator.dart';
 import 'package:chat_app/addroom/add_room_view_model.dart';
+import 'package:chat_app/home/home_screen.dart';
 import 'package:chat_app/model/category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -88,9 +91,10 @@ class _AddRoomState extends State<AddRoom> implements AddRoomNavigator {
                       Image.asset('assets/images/group.png'),
                       SizedBox(height: 20),
                       TextFormField(
-                        decoration: InputDecoration(hintText: 'Enter Room Name'),
+                        decoration:
+                            InputDecoration(hintText: 'Enter Room Name'),
                         onChanged: (text) {
-                          text = roomTitle;
+                          roomTitle = text;
                         },
                         validator: (text) {
                           if (text == null || text.trim().isEmpty) {
@@ -100,6 +104,7 @@ class _AddRoomState extends State<AddRoom> implements AddRoomNavigator {
                       ),
                       SizedBox(height: 20),
                       DropdownButton<Category>(
+                        hint: Text('Select Room Category'),
                         value: selectedItem,
                         items: CategoryList.map(
                             (category) => DropdownMenuItem<Category>(
@@ -125,33 +130,31 @@ class _AddRoomState extends State<AddRoom> implements AddRoomNavigator {
                         decoration:
                             InputDecoration(hintText: 'Enter Room Description'),
                         onChanged: (text) {
-                          text = roomDescription;
+                          roomDescription = text;
                         },
                         validator: (text) {
                           if (text == null || text.trim().isEmpty) {
                             return 'Please enter room Description';
                           }
                         },
-
                       ),
                       SizedBox(height: 25),
-                        // Adjust the width as needed
-                        ElevatedButton(
-                          onPressed: () {
-                            validateForm();
-                          },
-                          style: ButtonStyle(
-                            shape:
-                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    20), // Adjust the radius for circular edges
-                              ),
+                      // Adjust the width as needed
+                      ElevatedButton(
+                        onPressed: () {
+                          validateForm();
+                        },
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  20), // Adjust the radius for circular edges
                             ),
                           ),
-                          child: Text('Create'),
                         ),
-
+                        child: Text('Create'),
+                      ),
                     ],
                   ),
                 ),
@@ -177,7 +180,9 @@ class _AddRoomState extends State<AddRoom> implements AddRoomNavigator {
 
   @override
   void navigateToHome() {
-    // TODO: implement navigateToHome
+    Timer(Duration(seconds: 1), () {
+      Navigator.pushNamed(context, HomeScreen.routeScreen);
+    });
   }
 
   @override
