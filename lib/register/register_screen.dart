@@ -1,5 +1,6 @@
 import 'package:chat_app/firebase_errors.dart';
 import 'package:chat_app/home/home_screen.dart';
+import 'package:chat_app/model/myuser.dart';
 import 'package:chat_app/register/register_navigator.dart';
 import 'package:chat_app/register/register_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,8 @@ import 'dart:async';
 import 'package:chat_app/utils.dart' as Utils;
 
 import 'package:provider/provider.dart';
+
+import '../provider/user_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String routename = 'registerScreen';
@@ -190,7 +193,9 @@ class _RegisterScreenState extends State<RegisterScreen> implements RegisterNavi
   }
 
   @override
-  void navigateToHome() {
+  void navigateToHome(MyUsers users) {
+    var userProvider= Provider.of<UserProvider>(context,listen: false);
+    userProvider.users = users;
     Timer(
       Duration(seconds: 5),
           () {

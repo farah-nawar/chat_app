@@ -28,7 +28,7 @@ class RegisterViewModel extends ChangeNotifier {
 
       navigator.hideLoading();
       navigator.showMessage('Registered Successfully');
-      navigator.navigateToHome();
+      navigator.navigateToHome(user);
       /// stop loading
       /// message that is done
     } on FirebaseAuthException catch (e) {

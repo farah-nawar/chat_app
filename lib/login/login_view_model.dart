@@ -20,7 +20,7 @@ class LoginViewModel extends ChangeNotifier {
         navigator.hideLoading();
         navigator.showMessage('please try again');
       }else {
-        navigator.navigateToHome();
+        navigator.navigateToHome(getuser );
       }
       print('id: ${credential.user?.uid}');
     } on FirebaseAuthException catch (e) {

@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:chat_app/home/home_screen.dart';
 import 'package:chat_app/login/login_navigator.dart';
 import 'package:chat_app/login/login_view_model.dart';
+import 'package:chat_app/model/myuser.dart';
+import 'package:chat_app/provider/user_provider.dart';
 import 'package:chat_app/register/register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/utils.dart' as Utils;
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routename = 'login';
@@ -163,12 +166,15 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
   }
 
   @override
-  void navigateToHome() {
+  void navigateToHome(MyUsers users) {
+    var userProvider= Provider.of<UserProvider>(context,listen: false);
+    userProvider.users = users;
     Timer(
       Duration(seconds: 5),
-      () {
+          () {
         Navigator.of(context).pushReplacementNamed(HomeScreen.routeScreen);
       },
     );
   }
+
 }
