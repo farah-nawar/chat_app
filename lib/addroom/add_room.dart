@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:chat_app/addroom/add_room_navigator.dart';
 import 'package:chat_app/addroom/add_room_view_model.dart';
+import 'package:chat_app/home/home_screen.dart';
 import 'package:chat_app/model/category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:chat_app/utils.dart' as Utils;
 
 class AddRoom extends StatefulWidget {
   static const String routename = 'room';
@@ -68,89 +72,91 @@ class _AddRoomState extends State<AddRoom> implements AddRoomNavigator {
               ),
               child: Form(
                 key: formkey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Create New Room',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Create New Room',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Image.asset('assets/images/group.png'),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      decoration: InputDecoration(hintText: 'Enter Room Name'),
-                      onChanged: (text) {
-                        text = roomTitle;
-                      },
-                      validator: (text) {
-                        if (text == null || text.trim().isEmpty) {
-                          return 'Please enter room name';
-                        }
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    DropdownButton<Category>(
-                      value: selectedItem,
-                      items: CategoryList.map(
-                          (category) => DropdownMenuItem<Category>(
-                              value: category,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(category.title),
-                                  Image.asset(category.image)
-                                ],
-                              ))).toList(),
-                      onChanged: (newcategory) {
-                        if (newcategory == null) {
-                          return;
-                        }
-                        selectedItem = newcategory;
-                        setState(() {});
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      decoration:
-                          InputDecoration(hintText: 'Enter Room Description'),
-                      onChanged: (text) {
-                        text = roomDescription;
-                      },
-                      validator: (text) {
-                        if (text == null || text.trim().isEmpty) {
-                          return 'Please enter room Description';
-                        }
-                      },
-                      maxLines: 4,
-                    ),
-                    SizedBox(height: 25),
-                    SizedBox(
-                      width: 100, // Adjust the width as needed
-                      child: ElevatedButton(
+                      SizedBox(height: 10),
+                      Image.asset('assets/images/group.png'),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        decoration:
+                            InputDecoration(hintText: 'Enter Room Name'),
+                        onChanged: (text) {
+                          roomTitle = text;
+                        },
+                        validator: (text) {
+                          if (text == null || text.trim().isEmpty) {
+                            return 'Please enter room name';
+                          }
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      DropdownButton<Category>(
+                        hint: Text('Select Room Category'),
+                        value: selectedItem,
+                        items: CategoryList.map(
+                            (category) => DropdownMenuItem<Category>(
+                                value: category,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(category.title),
+                                    Image.asset(category.image)
+                                  ],
+                                ))).toList(),
+                        onChanged: (newcategory) {
+                          if (newcategory == null) {
+                            return;
+                          }
+                          selectedItem = newcategory;
+                          setState(() {});
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        decoration:
+                            InputDecoration(hintText: 'Enter Room Description'),
+                        onChanged: (text) {
+                          roomDescription = text;
+                        },
+                        validator: (text) {
+                          if (text == null || text.trim().isEmpty) {
+                            return 'Please enter room Description';
+                          }
+                        },
+                      ),
+                      SizedBox(height: 25),
+                      // Adjust the width as needed
+                      ElevatedButton(
                         onPressed: () {
                           validateForm();
                         },
                         style: ButtonStyle(
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20), // Adjust the radius for circular edges
+                              borderRadius: BorderRadius.circular(
+                                  20), // Adjust the radius for circular edges
                             ),
                           ),
                         ),
                         child: Text('Create'),
                       ),
-                    )
-
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -159,10 +165,35 @@ class _AddRoomState extends State<AddRoom> implements AddRoomNavigator {
       ),
     );
   }
-  void validateForm(){
-    if(formkey.currentState?.validate()==true){
+
+  void validateForm() {
+    if (formkey.currentState?.validate() == true) {
       //add room
       viewModel.addRoom(roomDescription, roomTitle, selectedItem!.id);
     }
+  }
+
+  @override
+  void hideLoading() {
+    Utils.hideloading(context);
+  }
+
+  @override
+  void navigateToHome() {
+    Timer(Duration(seconds: 1), () {
+      Navigator.pushNamed(context, HomeScreen.routeScreen);
+    });
+  }
+
+  @override
+  void showLoading() {
+    Utils.showloading(context);
+  }
+
+  @override
+  void showMessage(String message) {
+    Utils.showMessage(context, message, 'ok', (context) {
+      Navigator.pop(context);
+    });
   }
 }
