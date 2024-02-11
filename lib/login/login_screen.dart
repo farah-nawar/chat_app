@@ -36,109 +36,112 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          color: Colors.white,
-        ),
-        Image.asset(
-          'assets/images/main_background.png',
-          width: double.infinity,
-          fit: BoxFit.fill,
-        ),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
+    return ChangeNotifierProvider(
+      create: (context)=> viewModel,
+      child: Stack(
+        children: [
+          Container(
+            color: Colors.white,
+          ),
+          Image.asset(
+            'assets/images/main_background.png',
+            width: double.infinity,
+            fit: BoxFit.fill,
+          ),
+          Scaffold(
             backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: Text(
-              'Login',
-              style: TextStyle(fontSize: 24),
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: Text(
+                'Login',
+                style: TextStyle(fontSize: 24),
+              ),
+              centerTitle: true,
             ),
-            centerTitle: true,
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Welcome Back!',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+            body: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Welcome Back!',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Form(
-                  key: formkey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Email',
+                  SizedBox(height: 10),
+                  Form(
+                    key: formkey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                          ),
+                          onChanged: (text) {
+                            email = text;
+                          },
+                          validator: (text) {
+                            final bool emailValid = RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(text!);
+                            if (text == null || text.trim().isEmpty) {
+                              return 'please enter your Email';
+                            }
+                            if (!emailValid) {
+                              return 'please enter valid email';
+                            }
+                            return null;
+                          },
                         ),
-                        onChanged: (text) {
-                          email = text;
-                        },
-                        validator: (text) {
-                          final bool emailValid = RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(text!);
-                          if (text == null || text.trim().isEmpty) {
-                            return 'please enter your Email';
-                          }
-                          if (!emailValid) {
-                            return 'please enter valid email';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Password',
+                        TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                          ),
+                          onChanged: (text) {
+                            password = text;
+                          },
+                          validator: (text) {
+                            if (text == null || text.trim().isEmpty) {
+                              return 'please enter your password';
+                            }
+                            if (text.length < 6) {
+                              return 'password must be at least 6 characters';
+                            }
+                            return null;
+                          },
                         ),
-                        onChanged: (text) {
-                          password = text;
-                        },
-                        validator: (text) {
-                          if (text == null || text.trim().isEmpty) {
-                            return 'please enter your password';
-                          }
-                          if (text.length < 6) {
-                            return 'password must be at least 6 characters';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 15),
-                      Text('Forgot Password?'),
-                      SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          validateForm();
-                        },
-                        child: Text('Login'),
-                      ),
-                      SizedBox(height: 15),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(RegisterScreen.routename);
-                        },
-                        child: Text('Create An Account'),
-                      ),
-                    ],
+                        SizedBox(height: 15),
+                        Text('Forgot Password?'),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            validateForm();
+                          },
+                          child: Text('Login'),
+                        ),
+                        SizedBox(height: 15),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(RegisterScreen.routename);
+                          },
+                          child: Text('Create An Account'),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
