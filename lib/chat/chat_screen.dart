@@ -1,8 +1,11 @@
 import 'package:chat_app/chat/chat_navigator.dart';
+import 'package:chat_app/chat/message_widget.dart';
 import 'package:chat_app/provider/user_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:chat_app/utils.dart' as Utils;
+import '../model/message.dart';
 import '../model/room.dart';
 import 'chat_view_model.dart';
 
@@ -28,6 +31,7 @@ class _ChatScreenState extends State<ChatScreen> implements ChatNavigator {
     var args = ModalRoute.of(context)?.settings.arguments as Room;
     viewModel.room = args;
     var provider= Provider.of<UserProvider>(context);
+    viewModel.listenforUpdateMessage();
     viewModel.currentuser=provider.users!;
     return ChangeNotifierProvider(
       create: (context) => viewModel,
@@ -70,7 +74,30 @@ class _ChatScreenState extends State<ChatScreen> implements ChatNavigator {
                 ),
               child: Column(
                 children: [
-                  Expanded(child: Container()),
+                  Expanded(child: StreamBuilder<QuerySnapshot<Message>>(
+                  stream: viewModel.streamMessages,
+                  builder: (context,asyncSnapchot){
+                    if(asyncSnapchot.connectionState== ConnectionState.waiting){
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }else if(asyncSnapchot.hasError){
+                      return Text(asyncSnapchot.error.toString());
+
+                    }else{
+                     // var messagelist = asyncSnapchot.data?.docs
+                      //print('message :${doc.data()}');
+                      var messagelist=asyncSnapchot.data?.docs.map((doc) => doc.data()).toList() ?? [];
+
+                      return ListView.builder(
+                        itemBuilder: (context,index) {
+                      return MessageWidget(message: messagelist[index]);
+                      },
+                              itemCount: messagelist.length,
+                      );
+                    }
+                  },
+                  )),
                   Row(
                     children: [
                       Expanded(
