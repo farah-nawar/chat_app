@@ -12,8 +12,8 @@ class RoomWidget extends StatelessWidget {
         Navigator.of(context).pushNamed(ChatScreen.routename,arguments: room);
       },
       child: Container(
-        margin: EdgeInsets.all(18),
-        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),

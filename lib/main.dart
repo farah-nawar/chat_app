@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     var userprovider=Provider.of<UserProvider>(context);
     return MaterialApp(
-     // initialRoute:userprovider.firebaseUser==null ? LoginScreen.routename : HomeScreen.routeScreen,
-      initialRoute: HomeScreen.routeScreen,
+     initialRoute:userprovider.firebaseUser==null ? LoginScreen.routename : HomeScreen.routeScreen,
+     // initialRoute: RegisterScreen.routename,
       routes: {
         RegisterScreen.routename: (context) => RegisterScreen(),
         LoginScreen.routename:(context) => LoginScreen(),

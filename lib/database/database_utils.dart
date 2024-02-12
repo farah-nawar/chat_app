@@ -1,6 +1,8 @@
+import 'package:chat_app/model/message.dart';
 import 'package:chat_app/model/myuser.dart';
 import 'package:chat_app/model/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 /*getusercollection() Function:
 
 This is a static function that returns a reference to a Firestore collection of documents.
@@ -24,44 +26,65 @@ It uses a MyUsers object for the user's data,
 and the registeruser function adds or updates a a document in the collection with the user's data.
 
  */
-class DatabaseUtils{
-
-    static CollectionReference<MyUsers> getusercollection() {
-      //collection is where we store this data
-      return FirebaseFirestore.instance
-          .collection(MyUsers.collectionName)
-          .withConverter<MyUsers>(
-          fromFirestore: ((snapshot, options) =>
-              MyUsers.fromJson(snapshot.data()!)),
-          toFirestore: (user, options) => user.toJson());
-    }
-    static CollectionReference<Room> getRoomcollection() {
-      //collection is where we store this data
-      return FirebaseFirestore.instance
-          .collection(Room.collectionName)
-          .withConverter<Room>(
-          fromFirestore: ((snapshot, options) =>
-              Room.fromJson(snapshot.data()!)),
-          toFirestore: (room, options) => room.toJson());
-    }
-
-    static Future<void> registeruser(MyUsers user) async {
-      return getusercollection().doc(user.id).set(user);
-    }
-    // function used in provider to get current user
-    static Future<MyUsers?> getUser(String userId) async {
-      var documentsnapshot = await getusercollection().doc(userId).get();
-      return documentsnapshot.data();
-    }
-
-    static Future<void> addRoomtofirestore(Room room) async {
-      var query = await getRoomcollection().doc();
-      room.Roomid = query.id;
-      return query.set(room);
-    }
-    static Stream<QuerySnapshot<Room>> getRooms() {
-      return getRoomcollection().snapshots();
-    }
-
+class DatabaseUtils {
+  static CollectionReference<MyUsers> getusercollection() {
+    //collection is where we store this data
+    return FirebaseFirestore.instance
+        .collection(MyUsers.collectionName)
+        .withConverter<MyUsers>(
+            fromFirestore: ((snapshot, options) =>
+                MyUsers.fromJson(snapshot.data()!)),
+            toFirestore: (user, options) => user.toJson());
   }
 
+  static CollectionReference<Room> getRoomcollection() {
+    //collection is where we store this data
+    return FirebaseFirestore.instance
+        .collection(Room.collectionName)
+        .withConverter<Room>(
+            fromFirestore: ((snapshot, options) =>
+                Room.fromJson(snapshot.data()!)),
+            toFirestore: (room, options) => room.toJson());
+  }
+
+  static CollectionReference<Message> getMessageCollection(String roomId) {
+    return FirebaseFirestore.instance
+        .collection(Room.collectionName)
+        .doc(roomId)
+        .collection(Message.collectionName)
+        .withConverter<Message>(
+            fromFirestore: ((snapshot, options) =>
+                Message.fromJson(snapshot.data()!)),
+            toFirestore: (message, options) => message.toJson());
+  }
+
+  static Future<void> registeruser(MyUsers user) async {
+    return getusercollection().doc(user.id).set(user);
+  }
+
+  // function used in provider to get current user
+  static Future<MyUsers?> getUser(String userId) async {
+    var documentsnapshot = await getusercollection().doc(userId).get();
+    return documentsnapshot.data();
+  }
+
+  static Future<void> addRoomtofirestore(Room room) async {
+    var query = await getRoomcollection().doc();
+    room.Roomid = query.id;
+    return query.set(room);
+  }
+
+  static Stream<QuerySnapshot<Room>> getRooms() {
+    return getRoomcollection().snapshots();
+  }
+  static Future<void> InsertMessage(Message message){
+    var messageCollection= getMessageCollection(message.roomId);
+    var docRef= messageCollection.doc();
+    message.id= docRef.id;
+    return docRef.set(message);
+
+  }
+  static void getMessages(){
+
+  }
+}
