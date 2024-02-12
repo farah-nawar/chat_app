@@ -84,7 +84,8 @@ class DatabaseUtils {
     return docRef.set(message);
 
   }
-  static void getMessages(){
+  static Stream<QuerySnapshot<Message>> getMessages(String roomId){
+    return getMessageCollection(roomId).orderBy('dateTime').snapshots();
 
   }
 }
