@@ -70,7 +70,9 @@ class _HomeScreenState extends State<HomeScreen> implements HomeNavigator{
                 else{
                   // has data
                   var roomslist=asyncsnapshot.data?.docs.map((doc) => doc.data()).toList() ?? [];
-                  return GridView.builder(itemBuilder:(context,index){
+                  return GridView.builder(
+                    padding: EdgeInsets.all(5),
+                    itemBuilder:(context,index){
                     return RoomWidget(room: roomslist[index]);
                   },itemCount: roomslist?.length ?? 0,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

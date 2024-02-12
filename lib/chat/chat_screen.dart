@@ -1,7 +1,8 @@
 import 'package:chat_app/chat/chat_navigator.dart';
+import 'package:chat_app/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:chat_app/utils.dart' as Utils;
 import '../model/room.dart';
 import 'chat_view_model.dart';
 
@@ -13,6 +14,8 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> implements ChatNavigator {
   ChatScreenViewModel viewModel = ChatScreenViewModel();
+  String messageContent='';
+  TextEditingController controller= TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -23,6 +26,9 @@ class _ChatScreenState extends State<ChatScreen> implements ChatNavigator {
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)?.settings.arguments as Room;
+    viewModel.room = args;
+    var provider= Provider.of<UserProvider>(context);
+    viewModel.currentuser=provider.users!;
     return ChangeNotifierProvider(
       create: (context) => viewModel,
       child: Stack(
@@ -46,7 +52,7 @@ class _ChatScreenState extends State<ChatScreen> implements ChatNavigator {
               ),
               centerTitle: true,
             ),
-            body: Container(
+            body:Container(
                 margin: EdgeInsets.symmetric(horizontal: 20, vertical: 32),
                 padding: EdgeInsets.all(20),
                 width: double.infinity,
@@ -68,7 +74,12 @@ class _ChatScreenState extends State<ChatScreen> implements ChatNavigator {
                   Row(
                     children: [
                       Expanded(
+
                         child: TextField(
+                          controller: controller,
+                          onChanged: (text){
+                            messageContent=text;
+                          },
                           decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(5),
                               hintText: 'Type a message',
@@ -77,7 +88,9 @@ class _ChatScreenState extends State<ChatScreen> implements ChatNavigator {
                               topRight: Radius.circular(12)))),
                         ),),
                       SizedBox(width: 8,),
-                      ElevatedButton(onPressed: (){},
+                      ElevatedButton(onPressed: (){
+                        viewModel.sendMessage(messageContent);
+                      },
                           child: Row(
                             children: [
                               Text('Send'),
@@ -98,11 +111,13 @@ class _ChatScreenState extends State<ChatScreen> implements ChatNavigator {
 
   @override
   void clearMessage() {
-    // TODO: implement clearMessage
+controller.clear();
   }
 
   @override
   void showMessage(String message) {
-    // TODO: implement showMessage
+    Utils.showMessage(context, message, 'OK', (context){
+      Navigator.of(context);
+    });
   }
 }
